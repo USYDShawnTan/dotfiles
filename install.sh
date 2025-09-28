@@ -6,11 +6,18 @@ DOTFILES_DIR="$HOME/dotfiles"
 
 echo "🌀 安装 Zsh 和 Git..."
 if command -v apt >/dev/null; then
-    sudo apt update && sudo apt install -y zsh git wget curl
+    # 容错：apt update 出错也不中断
+    sudo apt update || true
+    sudo apt install -y zsh git wget curl || true
 elif command -v yum >/dev/null; then
     sudo yum install -y zsh git wget curl
 else
     echo "❌ 不支持的 Linux 包管理器，请手动安装 zsh 和 git"
+    exit 1
+fi
+
+if ! command -v zsh >/dev/null; then
+    echo "❌ zsh 安装失败，请手动安装后再运行本脚本"
     exit 1
 fi
 
